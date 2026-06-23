@@ -15,11 +15,27 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
+        // Create default admin user
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Admin NusaFlow',
+            'email' => 'admin@nusaflow.test',
+            'role' => 'super_admin',
+        ]);
+
+        // Create a test tourist user
+        User::factory()->create([
+            'name' => 'Wisatawan Test',
+            'email' => 'tourist@nusaflow.test',
+            'role' => 'tourist',
+        ]);
+
+        // Run domain seeders in order
+        $this->call([
+            DestinationCategorySeeder::class,
+            DestinationSeeder::class,
+            VisitorLogSeeder::class,
+            EventSeeder::class,
+            CrowdPredictionSeeder::class,
         ]);
     }
 }

@@ -49,7 +49,7 @@ nusaflow-ai/
 | Tahap | Deskripsi                               | Status         |
 | ----- | --------------------------------------- | -------------- |
 | 1     | Fondasi repo dan dokumentasi            | ✅ Selesai      |
-| 2     | Database dan migration Laravel          | 🔲 Belum mulai |
+| 2     | Database dan migration Laravel          | ✅ Selesai      |
 | 3     | Dashboard admin Filament                | 🔲 Belum mulai |
 | 4     | API destinasi dan prediksi rule-based   | 🔲 Belum mulai |
 | 5     | Integrasi Flutter                       | 🔲 Belum mulai |
