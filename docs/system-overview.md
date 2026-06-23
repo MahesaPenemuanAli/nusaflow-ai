@@ -73,7 +73,7 @@ Layanan prediksi berbasis Python FastAPI:
 | ----------- | ---------------------------- |
 | Frontend    | Flutter (Dart), SDK ^3.10.1  |
 | Backend     | Laravel 13, PHP ^8.3         |
-| Admin Panel | Filament (direncanakan)      |
+| Admin Panel | Filament v5.x                |
 | AI Service  | FastAPI, Python 3.10+        |
 | Database    | MySQL / PostgreSQL           |
 | ML          | scikit-learn / TensorFlow    |

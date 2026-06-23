@@ -50,7 +50,7 @@ nusaflow-ai/
 | ----- | --------------------------------------- | -------------- |
 | 1     | Fondasi repo dan dokumentasi            | ✅ Selesai      |
 | 2     | Database dan migration Laravel          | ✅ Selesai      |
-| 3     | Dashboard admin Filament                | 🔲 Belum mulai |
+| 3     | Dashboard admin Filament                | ✅ Selesai      |
 | 4     | API destinasi dan prediksi rule-based   | 🔲 Belum mulai |
 | 5     | Integrasi Flutter                       | 🔲 Belum mulai |
 | 6     | AI service FastAPI                      | 🔲 Belum mulai |

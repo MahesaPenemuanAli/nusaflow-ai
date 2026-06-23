@@ -36,17 +36,17 @@ Pengembangan NusaFlow AI dibagi menjadi 8 tahap bertahap, dari fondasi hingga de
 
 ---
 
-## Tahap 3: Dashboard Admin Filament 🔲
+## Tahap 3: Dashboard Admin Filament ✅
 
-**Status**: Belum mulai
+**Status**: Selesai
 
 **Tujuan**: Membuat dashboard admin menggunakan Filament untuk mengelola data destinasi.
 
 **Deliverable**:
-- [ ] Install dan konfigurasi Filament
-- [ ] Resource: DestinationCategory, Destination, Event, VisitorLog
-- [ ] Widget dashboard: statistik destinasi, grafik pengunjung
-- [ ] User management (admin)
+- [x] Install dan konfigurasi Filament
+- [x] Resource: DestinationCategory, Destination, Event, VisitorLog
+- [x] Widget dashboard: statistik destinasi, grafik pengunjung
+- [x] User management (admin)
 
 ---
 
