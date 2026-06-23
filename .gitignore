@@ -1,0 +1,92 @@
+# ============================================
+# NusaFlow AI — Root .gitignore (Mono-repo)
+# Laravel + Flutter + Python FastAPI
+# ============================================
+
+# -------------------- Environment --------------------
+.env
+.env.backup
+.env.production
+.env.local
+.env.*.local
+
+# -------------------- Laravel / PHP --------------------
+/backend-laravel/vendor/
+/backend-laravel/node_modules/
+/backend-laravel/public/build/
+/backend-laravel/public/hot
+/backend-laravel/public/storage
+/backend-laravel/storage/*.key
+/backend-laravel/storage/pail
+/backend-laravel/.phpunit.cache
+/backend-laravel/.phpunit.result.cache
+/backend-laravel/auth.json
+/backend-laravel/_ide_helper.php
+/backend-laravel/Homestead.json
+/backend-laravel/Homestead.yaml
+
+# -------------------- Flutter / Dart --------------------
+/frontend_flutter/.dart_tool/
+/frontend_flutter/.flutter-plugins-dependencies
+/frontend_flutter/.pub-cache/
+/frontend_flutter/.pub/
+/frontend_flutter/build/
+/frontend_flutter/coverage/
+/frontend_flutter/**/doc/api/
+/frontend_flutter/**/ios/Flutter/.last_build_id
+/frontend_flutter/app.*.symbols
+/frontend_flutter/app.*.map.json
+
+# -------------------- Python / FastAPI --------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+*.egg
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# -------------------- Node.js --------------------
+node_modules/
+
+# -------------------- IDE / Editor --------------------
+.idea/
+.vscode/
+.cursor/
+.codex/
+.nova/
+.zed/
+*.iml
+*.ipr
+*.iws
+*.swp
+*.swo
+*~
+
+# -------------------- OS Generated --------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# -------------------- Logs --------------------
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# -------------------- Build / Compiled --------------------
+build/
+*.class
