@@ -59,11 +59,28 @@ python run.py
 
 Service akan berjalan di `http://127.0.0.1:8001`.
 
+## Machine Learning
+
+Saat ini `ai-service` telah dilengkapi dengan model machine learning berbasis RandomForestRegressor untuk memprediksi keramaian wisata. Data yang digunakan merupakan *dummy dataset* untuk tujuan *prototype*. Di masa depan, data akan menggunakan *visitor logs* dari Laravel.
+
+### 1. Generate Dataset Dummy
+```bash
+python scripts/generate_sample_training_data.py
+```
+
+### 2. Training Model
+```bash
+python scripts/train_crowd_model.py
+```
+Model dan metadata akan disimpan ke dalam folder `saved_models/`.
+
 ## Endpoint Tersedia
 
 - `GET /` : Endpoint root
 - `GET /health` : Health check
-- `POST /predict-crowd` : Prediksi keramaian destinasi
+- `GET /model-info` : Menampilkan informasi versi & metadata model ML
+- `POST /predict-crowd` : Prediksi keramaian (rule-based)
+- `POST /predict-crowd-ml` : Prediksi keramaian (machine learning)
 - `POST /recommend-destinations` : Rekomendasi destinasi alternatif
 
 ## Swagger UI

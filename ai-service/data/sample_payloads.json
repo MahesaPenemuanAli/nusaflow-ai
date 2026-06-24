@@ -38,5 +38,21 @@
         "is_active": true
       }
     ]
+  },
+  "predict_crowd_ml": {
+    "destination_id": 1,
+    "destination_name": "Pantai Merdeka",
+    "category": "Pantai",
+    "max_capacity": 1000,
+    "day_of_week": 6,
+    "month": 6,
+    "hour": 14,
+    "is_weekend": true,
+    "is_holiday": false,
+    "has_event": true,
+    "event_impact": "high",
+    "weather": "clear",
+    "temperature": 30.5,
+    "rain_level": 0.0
   }
 }

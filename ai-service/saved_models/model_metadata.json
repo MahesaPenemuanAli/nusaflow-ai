@@ -1,0 +1,11 @@
+{
+    "model_name": "RandomForestRegressor",
+    "model_version": "ml-rf-v1",
+    "target": "visitor_count",
+    "metrics": {
+        "mae": 60.93,
+        "rmse": 135.33,
+        "r2": 0.83
+    },
+    "trained_at": "2026-06-24T11:16:06.139810"
+}

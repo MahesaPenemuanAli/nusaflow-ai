@@ -54,7 +54,7 @@ nusaflow-ai/
 | 4     | API destinasi dan prediksi rule-based   | ✅ Selesai      |
 | 5     | Integrasi Flutter                       | ✅ Selesai      |
 | 6     | AI service FastAPI                      | ✅ Selesai      |
-| 7     | Machine learning                        | 🔲 Belum mulai |
+| 7     | Machine learning                        | ✅ Selesai      |
 | 8     | Deployment MVP                          | 🔲 Belum mulai |
 
 > Detail lengkap ada di [`docs/development-roadmap.md`](docs/development-roadmap.md)

@@ -100,18 +100,19 @@ Pengembangan NusaFlow AI dibagi menjadi 8 tahap bertahap, dari fondasi hingga de
 
 ---
 
-## Tahap 7: Machine Learning 🔲
+## Tahap 7: Machine Learning ✅
 
-**Status**: Belum mulai
+**Status**: Selesai
 
-**Tujuan**: Mengembangkan model ML untuk prediksi yang lebih akurat.
+**Tujuan**: Menambahkan model ML (RandomForest) untuk memprediksi keramaian.
 
 **Deliverable**:
-- [ ] Pengumpulan dan preprocessing data historis
-- [ ] Eksplorasi data (EDA) dan feature engineering
-- [ ] Training model (scikit-learn / TensorFlow)
-- [ ] Evaluasi model (MAE, RMSE, accuracy)
-- [ ] Integrasi model ke FastAPI service
+- [x] Script pembuat *dummy dataset* (`visitor_training_sample.csv`).
+- [x] *Feature builder* untuk preprocessing input.
+- [x] Script training menggunakan scikit-learn (`train_crowd_model.py`).
+- [x] Endpoint `POST /predict-crowd-ml` untuk melayani prediksi model.
+- [x] Endpoint `GET /model-info` untuk metadata model.
+- [x] Penanganan rapi jika model belum dilatih (fallback).
 - [ ] A/B testing: rule-based vs ML
 - [ ] Versioning model
 

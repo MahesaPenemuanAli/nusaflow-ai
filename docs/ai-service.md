@@ -34,11 +34,13 @@ Pengembangan AI Service dibagi menjadi dua tahap:
 - Faktor seperti akhir pekan (*weekend*), acara (*events*), dan cuaca memodifikasi *base_score* dengan bobot tertentu (misal: weekend +0.10).
 - Tidak ada data training. Cepat dan sangat ringan.
 
-### Tahap 7 (Masa depan): Machine Learning
-- Menggunakan model terprediksi (misal: XGBoost, Random Forest, atau LSTM).
-- Model akan di-*training* menggunakan data historis (`visitor_logs`).
-- Model file (seperti `.pkl` atau `.onnx`) akan disimpan di folder `/models` di dalam `ai-service` dan di-*load* ke dalam memori saat service menyala.
-- Confidence score akan di-generate langsung dari probabilitas model, bukan di-*hardcode*.
+### Tahap 7 (Saat ini): Machine Learning Foundation
+- Sistem dilengkapi model **RandomForestRegressor** ringan.
+- Saat ini model di-*training* menggunakan data *dummy* dari `generate_sample_training_data.py`.
+- Proses prediksi menggunakan fitur yang disiapkan melalui `app/ml/feature_builder.py`.
+- Model dan metadatanya disimpan di `saved_models/` dalam format `.joblib` dan `.json`.
+- Terdapat endpoint `/predict-crowd-ml` untuk menggunakan model, dan memiliki validasi fallback elegan (memberi info apabila model belum dilatih).
+- Di masa depan, data akan diambil melalui *visitor logs* nyata dari Laravel untuk model yang lebih presisi.
 
 ## Alur Komunikasi (Laravel <-> FastAPI)
 Di masa depan, Laravel akan berkomunikasi dengan FastAPI secara internal:
