@@ -22,7 +22,7 @@ ai-service/
 ## Prasyarat
 - Python 3.10+
 
-## Cara Instalasi
+## Cara Instalasi & Setup Environment
 
 1. Buka terminal dan masuk ke folder `ai-service`:
    ```bash
@@ -35,10 +35,20 @@ ai-service/
 3. Aktifkan virtual environment:
    - **Windows:** `.venv\Scripts\activate`
    - **Linux/Mac:** `source .venv/bin/activate`
-4. Install dependencies:
+4. Update pip dan install dependencies:
    ```bash
+   python -m pip install --upgrade pip
    pip install -r requirements.txt
    ```
+
+## Setup di VS Code (Mengatasi Error Import Pylance)
+
+Jika Anda melihat error seperti `Cannot find module 'fastapi'`, lakukan langkah ini di VS Code:
+1. Tekan **Ctrl + Shift + P** (atau Cmd + Shift + P di Mac).
+2. Ketik dan pilih **Python: Select Interpreter**.
+3. Pilih interpreter dari dalam folder `.venv`, contohnya: `ai-service/.venv/Scripts/python.exe`.
+
+Error Pylance akan hilang setelah VS Code menggunakan interpreter `.venv`.
 
 ## Cara Menjalankan Service
 
