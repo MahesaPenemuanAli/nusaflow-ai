@@ -15,6 +15,8 @@ AI Service  : http://localhost:8001
 
 Semua response mengikuti format standar:
 
+### Sukses
+
 ```json
 {
   "success": true,
@@ -23,7 +25,19 @@ Semua response mengikuti format standar:
 }
 ```
 
-## Rencana Endpoint
+### Error
+
+```json
+{
+  "success": false,
+  "message": "Deskripsi error",
+  "errors": { ... }
+}
+```
+
+---
+
+## Endpoint Aktif (Tahap 4) ✅
 
 ### Destinasi Wisata
 
@@ -31,36 +45,15 @@ Semua response mengikuti format standar:
 
 Mengambil daftar semua destinasi wisata yang aktif.
 
-- **Auth**: Tidak wajib
+- **Auth**: Tidak wajib (public)
+- **Status**: ✅ Aktif
 - **Query Params**:
-  - `category` — Filter berdasarkan kategori (slug)
-  - `search` — Pencarian berdasarkan nama
-  - `lat`, `lng`, `radius` — Filter berdasarkan lokasi
-  - `page`, `per_page` — Pagination
+  - `search` — Pencarian berdasarkan nama, slug, atau alamat
+  - `category_id` — Filter berdasarkan ID kategori
+  - `category_slug` — Filter berdasarkan slug kategori
+  - `crowd_level` — Filter berdasarkan level keramaian (low, moderate, high, packed)
+  - `limit` — Jumlah per halaman (default: 15, max: 50)
 - **Response**: Array destinasi dengan pagination
-
-```json
-{
-  "success": true,
-  "data": [
-    {
-      "id": 1,
-      "name": "Pantai Kuta",
-      "category": "alam",
-      "address": "Kuta, Bali",
-      "latitude": -8.7180,
-      "longitude": 115.1690,
-      "crowd_level": "moderate",
-      "image": "https://..."
-    }
-  ],
-  "meta": {
-    "current_page": 1,
-    "total": 50,
-    "per_page": 15
-  }
-}
-```
 
 ---
 
@@ -68,59 +61,39 @@ Mengambil daftar semua destinasi wisata yang aktif.
 
 Mengambil detail satu destinasi wisata.
 
-- **Auth**: Tidak wajib
-- **Response**: Detail lengkap destinasi termasuk rating rata-rata dan jam operasional
-
-```json
-{
-  "success": true,
-  "data": {
-    "id": 1,
-    "name": "Pantai Kuta",
-    "category": { "id": 1, "name": "Alam", "slug": "alam" },
-    "description": "Pantai terkenal di Bali...",
-    "address": "Kuta, Bali",
-    "latitude": -8.7180,
-    "longitude": 115.1690,
-    "max_capacity": 5000,
-    "opening_hour": "06:00",
-    "closing_hour": "18:00",
-    "ticket_price": 10000,
-    "average_rating": 4.2,
-    "total_reviews": 128
-  }
-}
-```
+- **Auth**: Tidak wajib (public)
+- **Status**: ✅ Aktif
+- **Response**: Detail destinasi termasuk:
+  - Informasi kategori
+  - Daftar event aktif
+  - 5 review terbaru
+  - Status keramaian rule-based otomatis
 
 ---
 
 #### `GET /api/destinations/{id}/crowd-status`
 
-Mengambil status keramaian terkini dan prediksi untuk destinasi tertentu.
+Mengambil prediksi keramaian destinasi berdasarkan rule-based analysis.
 
-- **Auth**: Tidak wajib
-- **Response**: Status keramaian saat ini dan prediksi beberapa hari ke depan
+- **Auth**: Tidak wajib (public)
+- **Status**: ✅ Aktif
+- **Query Params**:
+  - `date` — Tanggal prediksi (default: hari ini, format: YYYY-MM-DD)
+  - `hour` — Jam prediksi (default: jam sekarang, range: 0–23)
+- **Logika Prediksi**:
+  1. Hitung `crowd_score = visitor_count / max_capacity`
+  2. Jika weekend (Sabtu/Minggu): `+0.10`
+  3. Jika ada event aktif: `+0.05` (low), `+0.10` (medium), `+0.20` (high)
+  4. Score dibatasi maksimal `1.00`
+  5. Hasil disimpan ke tabel `crowd_predictions` via `updateOrCreate`
+- **Crowd Level**:
 
-```json
-{
-  "success": true,
-  "data": {
-    "destination_id": 1,
-    "current": {
-      "crowd_level": "high",
-      "predicted_count": 3500,
-      "max_capacity": 5000,
-      "percentage": 70
-    },
-    "forecast": [
-      { "date": "2026-06-24", "crowd_level": "moderate", "predicted_count": 2500 },
-      { "date": "2026-06-25", "crowd_level": "low", "predicted_count": 1200 }
-    ],
-    "model_version": "rule-based-v1",
-    "confidence_score": 72.5
-  }
-}
-```
+  | Score        | Level    | Label        |
+  | ------------ | -------- | ------------ |
+  | 0.00 – 0.30  | low      | Sepi         |
+  | 0.31 – 0.60  | moderate | Normal       |
+  | 0.61 – 0.85  | high     | Ramai        |
+  | > 0.85       | packed   | Sangat Ramai |
 
 ---
 
@@ -128,80 +101,35 @@ Mengambil status keramaian terkini dan prediksi untuk destinasi tertentu.
 
 Mengambil rekomendasi destinasi alternatif yang lebih sepi.
 
-- **Auth**: Tidak wajib
+- **Auth**: Tidak wajib (public)
+- **Status**: ✅ Aktif
 - **Query Params**:
-  - `limit` — Jumlah rekomendasi (default: 5)
-  - `radius` — Radius pencarian dalam km (default: 20)
-- **Response**: Array destinasi alternatif beserta prediksi keramaian
+  - `date` — Tanggal untuk cek keramaian (default: hari ini)
+  - `hour` — Jam untuk cek keramaian (default: jam sekarang)
+  - `limit` — Jumlah rekomendasi (default: 5, max: 20)
+- **Algoritma Scoring**:
 
-```json
-{
-  "success": true,
-  "data": [
-    {
-      "id": 5,
-      "name": "Pantai Dreamland",
-      "distance_km": 8.3,
-      "crowd_level": "low",
-      "predicted_count": 450,
-      "category": "alam",
-      "similarity_score": 0.85
-    }
-  ]
-}
-```
+  | Kriteria           | Skor |
+  | ------------------ | ---- |
+  | Kategori sama      | +30  |
+  | Crowd rendah (low) | +50  |
+  | Capacity > 0       | +10  |
+  | Jumlah review      | +10  |
+
+  Destinasi dengan status `packed` difilter dari hasil.
 
 ---
 
 ### Admin Endpoints
 
-#### `POST /api/admin/visitor-logs`
-
-Menambahkan catatan log pengunjung harian (khusus admin).
-
-- **Auth**: Wajib (role: admin)
-- **Request Body**:
-
-```json
-{
-  "destination_id": 1,
-  "date": "2026-06-23",
-  "visitor_count": 3200,
-  "weather": "cerah",
-  "notes": "Hari libur nasional"
-}
-```
-
-- **Response**: Data visitor log yang baru dibuat
-
----
-
-#### `POST /api/admin/events`
-
-Menambahkan event yang mempengaruhi keramaian (khusus admin).
-
-- **Auth**: Wajib (role: admin)
-- **Request Body**:
-
-```json
-{
-  "destination_id": 1,
-  "name": "Festival Kuta Beach",
-  "description": "Festival tahunan di Pantai Kuta",
-  "start_date": "2026-07-01",
-  "end_date": "2026-07-03",
-  "expected_impact": "high"
-}
-```
-
-- **Response**: Data event yang baru dibuat
+Input data visitor log dan event dilakukan melalui **Filament Admin Dashboard** (`/admin`), bukan melalui API endpoint langsung. Ini memberikan keamanan yang lebih baik dan UI yang nyaman untuk operator admin.
 
 ---
 
 ## Endpoint Masa Depan (Direncanakan)
 
 | Method | Endpoint | Deskripsi |
-|--------|----------|-----------|
+|--------|----------|-----------| 
 | POST | `/api/auth/register` | Registrasi wisatawan |
 | POST | `/api/auth/login` | Login dan dapatkan token |
 | POST | `/api/checkins` | Check-in di destinasi |
@@ -210,12 +138,13 @@ Menambahkan event yang mempengaruhi keramaian (khusus admin).
 | POST | `/api/reviews` | Tulis ulasan destinasi |
 | GET | `/api/ai/predict/{destination_id}` | Prediksi langsung dari AI service |
 
-## Catatan
+## Catatan Teknis
 
-- Autentikasi menggunakan Laravel Sanctum (Bearer Token).
-- Rate limiting diterapkan untuk endpoint publik.
-- Endpoint admin dilindungi middleware `auth` dan `role:admin`.
+- Endpoint publik tidak memerlukan autentikasi.
+- Autentikasi (jika ditambahkan nanti) akan menggunakan Laravel Sanctum (Bearer Token).
+- Prediksi rule-based menggunakan `CrowdPredictionService` dengan method `rule_based` dan model version `rule-based-v1`.
 - Format tanggal menggunakan ISO 8601 (`YYYY-MM-DD`).
+- Contoh request/response lengkap tersedia di [`docs/api-examples.md`](api-examples.md).
 
 ---
 

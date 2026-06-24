@@ -8,7 +8,9 @@ Folder ini berisi dokumentasi teknis dan perencanaan untuk project NusaFlow AI.
 | ------- | --------- |
 | [system-overview.md](system-overview.md) | Gambaran umum arsitektur dan alur sistem |
 | [database-design.md](database-design.md) | Rancangan tabel database dan relasi antar tabel |
-| [api-plan.md](api-plan.md) | Rencana endpoint API backend dan AI service |
+| [api-plan.md](api-plan.md) | Rencana dan dokumentasi endpoint API |
+| [api-examples.md](api-examples.md) | Contoh request dan response API |
+| [admin-dashboard.md](admin-dashboard.md) | Panduan dashboard admin Filament |
 | [development-roadmap.md](development-roadmap.md) | Roadmap pengembangan bertahap dari fondasi hingga deployment |
 
 ## Cara Berkontribusi pada Dokumentasi

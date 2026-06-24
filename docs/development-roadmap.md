@@ -50,21 +50,20 @@ Pengembangan NusaFlow AI dibagi menjadi 8 tahap bertahap, dari fondasi hingga de
 
 ---
 
-## Tahap 4: API Destinasi dan Prediksi Rule-based 🔲
+## Tahap 4: API Destinasi dan Prediksi Rule-based ✅
 
-**Status**: Belum mulai
+**Status**: Selesai
 
 **Tujuan**: Membuat REST API untuk destinasi dan prediksi keramaian sederhana.
 
 **Deliverable**:
-- [ ] `GET /api/destinations` — Daftar destinasi dengan filter dan pagination
-- [ ] `GET /api/destinations/{id}` — Detail destinasi
-- [ ] `GET /api/destinations/{id}/crowd-status` — Status keramaian (rule-based)
-- [ ] `GET /api/destinations/{id}/recommendations` — Rekomendasi alternatif
-- [ ] `POST /api/admin/visitor-logs` — Input log pengunjung
-- [ ] `POST /api/admin/events` — Input event
-- [ ] Logika prediksi rule-based berdasarkan: rata-rata visitor_logs, hari (weekday/weekend), ada tidaknya event
-- [ ] API testing dan dokumentasi endpoint
+- [x] `GET /api/destinations` — Daftar destinasi dengan filter dan pagination
+- [x] `GET /api/destinations/{id}` — Detail destinasi
+- [x] `GET /api/destinations/{id}/crowd-status` — Status keramaian (rule-based)
+- [x] `GET /api/destinations/{id}/recommendations` — Rekomendasi alternatif
+- [x] Admin input log pengunjung dan event via Filament Dashboard
+- [x] Logika prediksi rule-based (`CrowdPredictionService`) berdasarkan: visitor_logs, weekend, event impact
+- [x] API testing (7 test, 55 assertions) dan dokumentasi endpoint
 
 ---
 
