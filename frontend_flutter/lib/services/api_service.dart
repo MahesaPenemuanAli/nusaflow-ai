@@ -71,10 +71,13 @@ class ApiService {
     String? date,
     int? hour,
   }) async {
-    final queryParameters = <String, String>{
-      if (date != null) 'date': date,
-      if (hour != null) 'hour': hour.toString(),
-    };
+    final queryParameters = <String, String>{};
+    if (date != null) {
+      queryParameters['date'] = date;
+    }
+    if (hour != null) {
+      queryParameters['hour'] = hour.toString();
+    }
 
     final uri = Uri.parse('${ApiConfig.baseUrl}/destinations/$destinationId/crowd-status')
         .replace(queryParameters: queryParameters);
@@ -105,9 +108,13 @@ class ApiService {
   }) async {
     final queryParameters = <String, String>{
       'limit': limit.toString(),
-      if (date != null) 'date': date,
-      if (hour != null) 'hour': hour.toString(),
     };
+    if (date != null) {
+      queryParameters['date'] = date;
+    }
+    if (hour != null) {
+      queryParameters['hour'] = hour.toString();
+    }
 
     final uri = Uri.parse('${ApiConfig.baseUrl}/destinations/$destinationId/recommendations')
         .replace(queryParameters: queryParameters);

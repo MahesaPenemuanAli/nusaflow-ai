@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_flutter/models/destination_model.dart';
 import 'package:frontend_flutter/models/recommendation_model.dart';
 import 'package:frontend_flutter/screens/destination_detail_screen.dart';
 import 'package:frontend_flutter/services/api_service.dart';
@@ -9,8 +10,17 @@ import 'package:frontend_flutter/widgets/loading_view.dart';
 
 class RecommendationsScreen extends StatefulWidget {
   final int destinationId;
+  final bool Function(int destinationId)? isDestinationFavorite;
+  final ValueChanged<DestinationModel>? onToggleFavorite;
+  final ValueChanged<DestinationModel>? onAddToPlan;
 
-  const RecommendationsScreen({super.key, required this.destinationId});
+  const RecommendationsScreen({
+    super.key,
+    required this.destinationId,
+    this.isDestinationFavorite,
+    this.onToggleFavorite,
+    this.onAddToPlan,
+  });
 
   @override
   State<RecommendationsScreen> createState() => _RecommendationsScreenState();
@@ -118,7 +128,13 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => DestinationDetailScreen(destinationId: dest.id),
+                  builder: (context) => DestinationDetailScreen(
+                    destinationId: dest.id,
+                    isFavorite: widget.isDestinationFavorite?.call(dest.id) ?? false,
+                    isDestinationFavorite: widget.isDestinationFavorite,
+                    onToggleFavorite: widget.onToggleFavorite,
+                    onAddToPlan: widget.onAddToPlan,
+                  ),
                 ),
               );
             },

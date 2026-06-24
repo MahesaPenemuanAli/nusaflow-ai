@@ -5,10 +5,18 @@ import 'package:frontend_flutter/utils/formatters.dart';
 
 class DestinationCard extends StatelessWidget {
   final DestinationModel destination;
+  final bool isFavorite;
+  final VoidCallback? onTap;
+  final VoidCallback? onFavoritePressed;
+  final VoidCallback? onAddToPlanPressed;
 
   const DestinationCard({
     super.key,
     required this.destination,
+    this.isFavorite = false,
+    this.onTap,
+    this.onFavoritePressed,
+    this.onAddToPlanPressed,
   });
 
   @override
@@ -17,16 +25,9 @@ class DestinationCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       clipBehavior: Clip.antiAlias,
       elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DestinationDetailScreen(destinationId: destination.id),
-            ),
-          );
-        },
+        onTap: onTap ?? () => _openDetail(context),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -44,6 +45,18 @@ class DestinationCard extends StatelessWidget {
                       ),
                     ),
                   ),
+                  if (onFavoritePressed != null)
+                    IconButton(
+                      tooltip: isFavorite ? 'Hapus dari favorit' : 'Tambah ke favorit',
+                      onPressed: onFavoritePressed,
+                      icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border),
+                      color: isFavorite ? Colors.red.shade600 : Colors.grey.shade700,
+                    ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
@@ -59,6 +72,13 @@ class DestinationCard extends StatelessWidget {
                       ),
                     ),
                   ),
+                  const Spacer(),
+                  if (onAddToPlanPressed != null)
+                    TextButton.icon(
+                      onPressed: onAddToPlanPressed,
+                      icon: const Icon(Icons.add_location_alt_outlined, size: 18),
+                      label: const Text('Rencana'),
+                    ),
                 ],
               ),
               const SizedBox(height: 8),
@@ -99,6 +119,15 @@ class DestinationCard extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _openDetail(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DestinationDetailScreen(destinationId: destination.id),
       ),
     );
   }

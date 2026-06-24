@@ -10,8 +10,19 @@ import 'package:frontend_flutter/screens/recommendations_screen.dart';
 
 class DestinationDetailScreen extends StatefulWidget {
   final int destinationId;
+  final bool isFavorite;
+  final ValueChanged<DestinationModel>? onToggleFavorite;
+  final ValueChanged<DestinationModel>? onAddToPlan;
+  final bool Function(int destinationId)? isDestinationFavorite;
 
-  const DestinationDetailScreen({super.key, required this.destinationId});
+  const DestinationDetailScreen({
+    super.key,
+    required this.destinationId,
+    this.isFavorite = false,
+    this.onToggleFavorite,
+    this.onAddToPlan,
+    this.isDestinationFavorite,
+  });
 
   @override
   State<DestinationDetailScreen> createState() => _DestinationDetailScreenState();
@@ -24,11 +35,13 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
   CrowdStatusModel? _crowdStatus;
   
   bool _isLoading = true;
+  bool _isFavorite = false;
   String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
+    _isFavorite = widget.isFavorite;
     _fetchData();
   }
 
@@ -44,9 +57,13 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
         _apiService.getCrowdStatus(widget.destinationId),
       ]);
 
+      final destination = futures[0] as DestinationModel;
+      final crowdStatus = futures[1] as CrowdStatusModel;
+
       setState(() {
-        _destination = futures[0] as DestinationModel;
-        _crowdStatus = futures[1] as CrowdStatusModel;
+        _destination = destination;
+        _crowdStatus = crowdStatus;
+        _isFavorite = widget.isDestinationFavorite?.call(destination.id) ?? _isFavorite;
         _isLoading = false;
       });
     } catch (e) {
@@ -62,6 +79,14 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detail Destinasi'),
+        actions: [
+          if (_destination != null && widget.onToggleFavorite != null)
+            IconButton(
+              tooltip: _isFavorite ? 'Hapus dari favorit' : 'Tambah ke favorit',
+              onPressed: _toggleFavorite,
+              icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border),
+            ),
+        ],
       ),
       body: _buildBody(),
       bottomNavigationBar: _destination != null ? _buildBottomBar() : null,
@@ -187,7 +212,12 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => RecommendationsScreen(destinationId: widget.destinationId),
+                builder: (context) => RecommendationsScreen(
+                  destinationId: widget.destinationId,
+                  isDestinationFavorite: widget.isDestinationFavorite,
+                  onToggleFavorite: widget.onToggleFavorite,
+                  onAddToPlan: widget.onAddToPlan,
+                ),
               ),
             );
           },
@@ -199,5 +229,13 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
         ),
       ),
     );
+  }
+
+  void _toggleFavorite() {
+    final destination = _destination;
+    if (destination == null) return;
+
+    widget.onToggleFavorite?.call(destination);
+    setState(() => _isFavorite = !_isFavorite);
   }
 }

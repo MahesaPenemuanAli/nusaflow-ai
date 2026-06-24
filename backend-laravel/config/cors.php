@@ -5,6 +5,14 @@ $allowedOrigins = array_values(array_filter(array_map(
     explode(',', (string) env('CORS_ALLOWED_ORIGINS', env('FRONTEND_URL', '')))
 )));
 
+$allowedOriginPatterns = array_values(array_filter(array_map(
+    'trim',
+    explode(',', (string) env(
+        'CORS_ALLOWED_ORIGIN_PATTERNS',
+        env('APP_ENV', 'production') === 'local' ? '#^http://(localhost|127\.0\.0\.1):[0-9]+$#' : ''
+    ))
+)));
+
 return [
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
@@ -12,7 +20,7 @@ return [
 
     'allowed_origins' => $allowedOrigins,
 
-    'allowed_origins_patterns' => [],
+    'allowed_origins_patterns' => $allowedOriginPatterns,
 
     'allowed_headers' => [
         'Accept',

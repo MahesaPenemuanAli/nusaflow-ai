@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_flutter/screens/home_screen.dart';
+import 'package:frontend_flutter/screens/main_navigation_screen.dart';
 
 class NusaFlowApp extends StatelessWidget {
   const NusaFlowApp({super.key});
@@ -22,7 +22,7 @@ class NusaFlowApp extends StatelessWidget {
           elevation: 0,
         ),
       ),
-      home: const HomeScreen(),
+      home: const MainNavigationScreen(),
     );
   }
 }
