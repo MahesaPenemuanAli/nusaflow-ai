@@ -13,6 +13,8 @@ Folder ini berisi dokumentasi teknis dan perencanaan untuk project NusaFlow AI.
 | [flutter-integration.md](flutter-integration.md) | Panduan integrasi aplikasi Flutter dengan API Laravel |
 | [ai-service.md](ai-service.md) | Dokumentasi arsitektur dan endpoint AI service (FastAPI) |
 | [admin-dashboard.md](admin-dashboard.md) | Panduan dashboard admin Filament |
+| [deployment-guide.md](deployment-guide.md) | Panduan deployment MVP Laravel, FastAPI, Flutter Web, dan PostgreSQL |
+| [deployment-checklist.md](deployment-checklist.md) | Checklist validasi sebelum dan sesudah deployment MVP |
 | [development-roadmap.md](development-roadmap.md) | Roadmap pengembangan bertahap dari fondasi hingga deployment |
 
 ## Cara Berkontribusi pada Dokumentasi

@@ -10,6 +10,29 @@
 .env.local
 .env.*.local
 
+# -------------------- Deployment MVP explicit paths --------------------
+# Laravel
+backend-laravel/.env
+backend-laravel/vendor/
+backend-laravel/node_modules/
+backend-laravel/storage/logs/*.log
+
+# Flutter
+frontend_flutter/build/
+frontend_flutter/.dart_tool/
+
+# Python
+ai-service/.env
+ai-service/.venv/
+ai-service/__pycache__/
+ai-service/.pytest_cache/
+ai-service/saved_models/*.joblib
+ai-service/saved_models/*.pkl
+
+# OS
+.DS_Store
+Thumbs.db
+
 # -------------------- Laravel / PHP --------------------
 /backend-laravel/vendor/
 /backend-laravel/node_modules/

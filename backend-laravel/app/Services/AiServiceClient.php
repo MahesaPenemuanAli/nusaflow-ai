@@ -13,7 +13,7 @@ class AiServiceClient
 
     public function __construct()
     {
-        $this->baseUrl = config('services.ai_service.base_url', 'http://127.0.0.1:8001');
+        $this->baseUrl = rtrim(config('services.ai_service.base_url'), '/');
         $this->timeout = config('services.ai_service.timeout', 5);
         $this->enabled = config('services.ai_service.enabled', true);
     }

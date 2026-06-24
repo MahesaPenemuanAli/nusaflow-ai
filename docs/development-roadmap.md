@@ -134,6 +134,21 @@ Pengembangan NusaFlow AI dibagi menjadi 8 tahap bertahap, dari fondasi hingga de
 
 ---
 
+## Tahap 10: Deployment MVP Preparation
+
+**Status**: Selesai
+
+**Tujuan**: Menyiapkan konfigurasi deployment MVP untuk Laravel API + Filament, FastAPI ML service, Flutter Web, dan PostgreSQL cloud database.
+
+**Deliverable**:
+- [x] `.env.example` production untuk Laravel dan FastAPI tanpa credential asli.
+- [x] CORS Laravel dikontrol dari environment Flutter Web.
+- [x] Dockerfile Laravel dan FastAPI untuk deployment MVP.
+- [x] Flutter Web API base URL dapat dikonfigurasi dengan `--dart-define`.
+- [x] Dokumentasi deployment dan checklist release.
+
+---
+
 ## Timeline Estimasi
 
 | Tahap | Durasi Estimasi | Kumulatif |
@@ -146,6 +161,7 @@ Pengembangan NusaFlow AI dibagi menjadi 8 tahap bertahap, dari fondasi hingga de
 | 6 | 5-7 hari | 5-6 minggu |
 | 7 | 7-14 hari | 7-8 minggu |
 | 8 | 3-5 hari | 8-9 minggu |
+| 10 | 1-2 hari | MVP deployment prep |
 
 > Timeline bersifat estimasi dan dapat berubah sesuai kondisi pengembangan.
 

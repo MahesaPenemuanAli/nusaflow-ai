@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Api\DestinationController;
 use App\Http\Controllers\Api\AiServiceController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\AuthenticatedUserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,9 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::get('/user', AuthenticatedUserController::class)->middleware('auth:sanctum');
 
 Route::prefix('destinations')->group(function () {
     Route::get('/', [DestinationController::class, 'index']);
