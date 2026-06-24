@@ -7,12 +7,10 @@ use App\Models\Destination;
 use App\Models\Event;
 use App\Models\VisitorLog;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class CrowdPredictionService
 {
-    /**
-     * Crowd level thresholds and labels.
-     */
     protected const LEVELS = [
         ['max' => 0.30, 'level' => 'low',      'label' => 'Sepi'],
         ['max' => 0.60, 'level' => 'moderate',  'label' => 'Normal'],
@@ -20,23 +18,14 @@ class CrowdPredictionService
         ['max' => 1.00, 'level' => 'packed',    'label' => 'Sangat Ramai'],
     ];
 
-    /**
-     * Event impact adjustments.
-     */
     protected const EVENT_ADJUSTMENTS = [
         'low'    => 0.05,
         'medium' => 0.10,
         'high'   => 0.20,
     ];
 
-    /**
-     * Weekend adjustment value.
-     */
     protected const WEEKEND_ADJUSTMENT = 0.10;
 
-    /**
-     * Generate a rule-based crowd prediction for a destination.
-     */
     public function predict(Destination $destination, ?string $date = null, ?int $hour = null): array
     {
         $date = $date ? Carbon::parse($date) : Carbon::today();
@@ -45,29 +34,85 @@ class CrowdPredictionService
         $visitorCount = $this->getVisitorCount($destination, $date, $hour);
         $maxCapacity = (int) $destination->max_capacity;
 
-        // Calculate base crowd score
-        $crowdScore = ($maxCapacity > 0) ? ($visitorCount / $maxCapacity) : 0.0;
-
-        // Determine adjustment factors
         $isWeekend = $date->isWeekend();
         $activeEvent = $this->getActiveEvent($destination, $date);
         $hasEvent = $activeEvent !== null;
-        $eventImpact = $hasEvent ? ($activeEvent->expected_impact ?? 'medium') : null;
+        $eventImpact = $hasEvent ? ($activeEvent->expected_impact ?? 'medium') : 'none';
 
-        // Apply weekend adjustment
+        $payload = [
+            'destination_id' => $destination->id,
+            'destination_name' => $destination->name,
+            'category' => $destination->category->name ?? 'Unknown',
+            'max_capacity' => $maxCapacity,
+            'day_of_week' => $date->dayOfWeekIso - 1,
+            'month' => $date->month,
+            'hour' => $hour,
+            'is_weekend' => $isWeekend,
+            'is_holiday' => false,
+            'has_event' => $hasEvent,
+            'event_impact' => $eventImpact,
+            'weather' => 'unknown',
+            'temperature' => null,
+            'rain_level' => null,
+            'visitor_count' => $visitorCount,
+            'prediction_date' => $date->format('Y-m-d'),
+            'prediction_hour' => $hour,
+        ];
+
+        $aiService = app(AiServiceClient::class);
+        $useMl = config('services.ai_service.use_ml', true);
+
+        // 1. Try FastAPI ML
+        if ($useMl) {
+            $mlResult = $aiService->predictCrowdMl($payload);
+            if ($mlResult) {
+                $mlResult['prediction_date'] = $payload['prediction_date'];
+                $mlResult['prediction_hour'] = $payload['prediction_hour'];
+                $mlResult['visitor_count'] = $visitorCount;
+                $this->savePrediction($mlResult);
+                return $mlResult;
+            }
+        }
+
+        // 2. Try FastAPI Rule-based fallback
+        $rbResult = $aiService->predictCrowdRuleBased([
+            'destination_id' => $destination->id,
+            'destination_name' => $destination->name,
+            'max_capacity' => $maxCapacity,
+            'visitor_count' => $visitorCount,
+            'prediction_date' => $payload['prediction_date'],
+            'prediction_hour' => $hour,
+            'is_weekend' => $isWeekend,
+            'has_event' => $hasEvent,
+            'event_impact' => $eventImpact === 'none' ? null : $eventImpact,
+            'weather' => null,
+        ]);
+
+        if ($rbResult) {
+            $rbResult['method'] = 'ai_service_rule_based';
+            $this->savePrediction($rbResult);
+            return $rbResult;
+        }
+
+        // 3. Fallback to Internal Rule-based
+        Log::warning('AI Service failed. Falling back to internal rule-based prediction.');
+        return $this->predictInternalRuleBased($destination, $date, $hour, $visitorCount, $maxCapacity, $isWeekend, $hasEvent, $eventImpact);
+    }
+
+    protected function predictInternalRuleBased(Destination $destination, Carbon $date, int $hour, int $visitorCount, int $maxCapacity, bool $isWeekend, bool $hasEvent, string $eventImpact): array
+    {
+        $crowdScore = ($maxCapacity > 0) ? ($visitorCount / $maxCapacity) : 0.0;
+
         if ($isWeekend) {
             $crowdScore += self::WEEKEND_ADJUSTMENT;
         }
 
-        // Apply event adjustment
         if ($hasEvent && isset(self::EVENT_ADJUSTMENTS[$eventImpact])) {
             $crowdScore += self::EVENT_ADJUSTMENTS[$eventImpact];
         }
 
-        // Cap score at 1.00
         $crowdScore = min(round($crowdScore, 2), 1.00);
 
-        // Determine crowd level and label
         [$crowdLevel, $crowdLabel] = $this->getCrowdLevel($crowdScore);
 
         $result = [
@@ -83,23 +128,17 @@ class CrowdPredictionService
             'factors' => [
                 'is_weekend' => $isWeekend,
                 'has_event' => $hasEvent,
-                'event_impact' => $eventImpact,
+                'event_impact' => $eventImpact === 'none' ? null : $eventImpact,
             ],
         ];
 
-        // Persist prediction
         $this->savePrediction($result);
 
         return $result;
     }
 
-    /**
-     * Get visitor count for a given destination, date, and hour.
-     * Falls back to daily average if hourly data is unavailable.
-     */
     protected function getVisitorCount(Destination $destination, Carbon $date, int $hour): int
     {
-        // Try exact hour match first
         $log = VisitorLog::where('destination_id', $destination->id)
             ->whereDate('visit_date', $date)
             ->where('visit_hour', $hour)
@@ -109,7 +148,6 @@ class CrowdPredictionService
             return (int) $log->visitor_count;
         }
 
-        // Fall back to daily average
         $dailyAvg = VisitorLog::where('destination_id', $destination->id)
             ->whereDate('visit_date', $date)
             ->avg('visitor_count');
@@ -117,9 +155,6 @@ class CrowdPredictionService
         return (int) ($dailyAvg ?? 0);
     }
 
-    /**
-     * Get the most impactful active event at this destination on the given date.
-     */
     protected function getActiveEvent(Destination $destination, Carbon $date): ?Event
     {
         return Event::where('destination_id', $destination->id)
@@ -129,11 +164,6 @@ class CrowdPredictionService
             ->first();
     }
 
-    /**
-     * Determine the crowd level and label from the score.
-     *
-     * @return array{0: string, 1: string}
-     */
     protected function getCrowdLevel(float $score): array
     {
         foreach (self::LEVELS as $level) {
@@ -141,14 +171,9 @@ class CrowdPredictionService
                 return [$level['level'], $level['label']];
             }
         }
-
-        // Score exceeds 1.00 (shouldn't happen after capping, but just in case)
         return ['packed', 'Sangat Ramai'];
     }
 
-    /**
-     * Persist the prediction result to the crowd_predictions table.
-     */
     protected function savePrediction(array $result): void
     {
         CrowdPrediction::updateOrCreate(
@@ -159,11 +184,11 @@ class CrowdPredictionService
                 'method' => $result['method'],
             ],
             [
-                'predicted_count' => $result['visitor_count'],
+                'predicted_count' => $result['predicted_count'] ?? $result['visitor_count'],
                 'crowd_score' => $result['crowd_score'],
                 'crowd_level' => $result['crowd_level'],
-                'confidence_score' => 0.70,
-                'model_version' => 'rule-based-v1',
+                'confidence_score' => $result['confidence_score'] ?? 0.70,
+                'model_version' => $result['model_version'] ?? 'rule-based-v1',
             ]
         );
     }

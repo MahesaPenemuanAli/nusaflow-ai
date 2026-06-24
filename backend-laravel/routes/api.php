@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\DestinationController;
+use App\Http\Controllers\Api\AiServiceController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,9 +16,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/user', function (Request $request) {
+    return $request->user();
+})->middleware('auth:sanctum');
+
 Route::prefix('destinations')->group(function () {
     Route::get('/', [DestinationController::class, 'index']);
     Route::get('/{destination}', [DestinationController::class, 'show']);
     Route::get('/{destination}/crowd-status', [DestinationController::class, 'crowdStatus']);
     Route::get('/{destination}/recommendations', [DestinationController::class, 'recommendations']);
+});
+
+Route::prefix('ai-service')->group(function () {
+    Route::get('/health', [AiServiceController::class, 'health']);
+    Route::get('/model-info', [AiServiceController::class, 'modelInfo']);
 });

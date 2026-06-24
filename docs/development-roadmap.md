@@ -113,26 +113,24 @@ Pengembangan NusaFlow AI dibagi menjadi 8 tahap bertahap, dari fondasi hingga de
 - [x] Endpoint `POST /predict-crowd-ml` untuk melayani prediksi model.
 - [x] Endpoint `GET /model-info` untuk metadata model.
 - [x] Penanganan rapi jika model belum dilatih (fallback).
-- [ ] A/B testing: rule-based vs ML
-- [ ] Versioning model
+- [x] A/B testing: rule-based vs ML
+- [x] Versioning model
 
 ---
 
-## Tahap 8: Deployment MVP 🔲
+## Tahap 8: Integrasi Ekosistem (Laravel <-> FastAPI) ✅
 
-**Status**: Belum mulai
+**Status**: Selesai
 
-**Tujuan**: Deploy minimum viable product ke environment produksi.
+**Tujuan**: Menghubungkan endpoint backend Laravel dengan hasil prediksi dari FastAPI.
 
 **Deliverable**:
-- [ ] Setup environment produksi (VPS/Cloud)
-- [ ] Deploy Laravel backend
-- [ ] Deploy FastAPI AI service
-- [ ] Build dan deploy Flutter web
-- [ ] Build APK Flutter untuk Android
-- [ ] SSL/HTTPS configuration
-- [ ] Monitoring dan logging dasar
-- [ ] User acceptance testing (UAT)
+- [x] Laravel `AiServiceClient` untuk HTTP Request.
+- [x] Modifikasi `CrowdPredictionService` untuk memakai AI Service terlebih dahulu.
+- [x] Skenario Fallback: ML -> FastAPI Rule-based -> Laravel Rule-based.
+- [x] API pengecekan status `/api/ai-service/health` dan `/model-info`.
+- [x] Testing Laravel dengan mocking `Http::fake()`.
+- [x] User acceptance testing (UAT)
 
 ---
 

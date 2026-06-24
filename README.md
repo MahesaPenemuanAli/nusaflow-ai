@@ -55,7 +55,7 @@ nusaflow-ai/
 | 5     | Integrasi Flutter                       | ✅ Selesai      |
 | 6     | AI service FastAPI                      | ✅ Selesai      |
 | 7     | Machine learning                        | ✅ Selesai      |
-| 8     | Deployment MVP                          | 🔲 Belum mulai |
+| 8     | Integrasi Laravel ke FastAPI ML         | ✅ Selesai      |
 
 > Detail lengkap ada di [`docs/development-roadmap.md`](docs/development-roadmap.md)
 

@@ -43,10 +43,10 @@ Pengembangan AI Service dibagi menjadi dua tahap:
 - Di masa depan, data akan diambil melalui *visitor logs* nyata dari Laravel untuk model yang lebih presisi.
 
 ## Alur Komunikasi (Laravel <-> FastAPI)
-Di masa depan, Laravel akan berkomunikasi dengan FastAPI secara internal:
+Saat ini, Laravel berkomunikasi dengan FastAPI secara internal:
 1. Wisatawan membuka detail destinasi di Flutter.
 2. Flutter menembak endpoint Laravel `GET /api/destinations/{id}/crowd-status`.
-3. Laravel mengambil data historis dari database MySQL, lalu mengirim JSON request ke `POST http://127.0.0.1:8001/predict-crowd`.
-4. FastAPI memproses prediksi (dengan rule-based atau ML).
-5. FastAPI mengembalikan hasil ke Laravel.
-6. Laravel mem-format data dan menyampaikannya kembali ke Flutter.
+3. Laravel menyusun payload fitur (kategori, visitor count, event, date/time) dan mengirim JSON request ke `POST http://127.0.0.1:8001/predict-crowd-ml`.
+4. FastAPI memproses prediksi (dengan RandomForestRegressor) dan mengembalikan hasil ke Laravel.
+5. Jika FastAPI gagal atau model tidak ada, Laravel secara otomatis turun menggunakan logika *rule-based* (fallback).
+6. Laravel mem-format data dan menyimpannya di database, lalu menyampaikannya kembali ke Flutter.
