@@ -67,19 +67,20 @@ Pengembangan NusaFlow AI dibagi menjadi 8 tahap bertahap, dari fondasi hingga de
 
 ---
 
-## Tahap 5: Integrasi Flutter 🔲
+## Tahap 5: Integrasi Flutter ✅
 
-**Status**: Belum mulai
+**Status**: Selesai
 
-**Tujuan**: Menghubungkan aplikasi Flutter dengan API Laravel.
+**Tujuan**: Menghubungkan aplikasi Flutter dengan API Laravel untuk menampilkan destinasi dan keramaian.
 
 **Deliverable**:
-- [ ] Setup HTTP client (Dio/http package)
-- [ ] Halaman daftar destinasi
-- [ ] Halaman detail destinasi dengan status keramaian
-- [ ] Halaman rekomendasi alternatif
-- [ ] UI/UX yang responsif dan menarik
-- [ ] State management (Provider/Riverpod/Bloc)
+- [x] Konfigurasi base URL (Web & Emulator)
+- [x] Pembuatan model data (`DestinationModel`, `CrowdStatusModel`, dll)
+- [x] Pembuatan `ApiService` dengan HTTP
+- [x] UI/UX `HomeScreen` (Daftar destinasi)
+- [x] UI/UX `DestinationDetailScreen` (Detail & status keramaian)
+- [x] UI/UX `RecommendationsScreen` (Destinasi alternatif)
+- [x] State management rapi (Loading, Error, Empty View)
 
 ---
 
