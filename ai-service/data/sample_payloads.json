@@ -1,0 +1,42 @@
+{
+  "predict_crowd": {
+    "destination_id": 1,
+    "destination_name": "Pantai Merdeka",
+    "max_capacity": 1000,
+    "visitor_count": 650,
+    "prediction_date": "2026-06-24",
+    "prediction_hour": 10,
+    "is_weekend": true,
+    "has_event": true,
+    "event_impact": "medium",
+    "weather": "clear"
+  },
+  "recommend_destinations": {
+    "current_destination_id": 1,
+    "preferred_category": "Pantai",
+    "avoid_crowded": true,
+    "limit": 3,
+    "candidates": [
+      {
+        "destination_id": 2,
+        "name": "Pantai Damai",
+        "category": "Pantai",
+        "max_capacity": 800,
+        "visitor_count": 250,
+        "rating": 4.5,
+        "distance_km": 4.2,
+        "is_active": true
+      },
+      {
+        "destination_id": 3,
+        "name": "Museum Kota",
+        "category": "Museum",
+        "max_capacity": 500,
+        "visitor_count": 300,
+        "rating": 4.2,
+        "distance_km": 8.1,
+        "is_active": true
+      }
+    ]
+  }
+}

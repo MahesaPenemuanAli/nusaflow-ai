@@ -84,19 +84,19 @@ Pengembangan NusaFlow AI dibagi menjadi 8 tahap bertahap, dari fondasi hingga de
 
 ---
 
-## Tahap 6: AI Service FastAPI 🔲
+## Tahap 6: AI Service FastAPI ✅
 
-**Status**: Belum mulai
+**Status**: Selesai
 
-**Tujuan**: Membangun service AI terpisah menggunakan FastAPI.
+**Tujuan**: Membuat AI service terpisah untuk prediksi kepadatan menggunakan Python FastAPI.
 
 **Deliverable**:
-- [ ] Setup project FastAPI di `ai-service/`
-- [ ] Endpoint prediksi keramaian
-- [ ] Koneksi ke database untuk mengambil data historis
-- [ ] Logika prediksi yang lebih canggih dari rule-based
-- [ ] Integrasi dengan Laravel backend via HTTP
-- [ ] Dokumentasi API (Swagger/OpenAPI otomatis dari FastAPI)
+- [x] Setup FastAPI + Uvicorn
+- [x] Struktur folder AI service (`app/`, `routes/`, `services/`)
+- [x] Endpoint `POST /predict-crowd` (rule-based)
+- [x] Endpoint `POST /recommend-destinations`
+- [x] Dokumentasi Swagger UI
+- [x] Testing API sederhana (`pytest`)
 
 ---
 
